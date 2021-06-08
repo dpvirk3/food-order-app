@@ -6,7 +6,7 @@ import styles from './HeaderCartButton.module.css';
 //3 spans to show icon, label and count as badge
 const HeaderCartButton = (props) => {
   return (
-    <button className={styles.button}>
+    <button className={styles.button} onClick={props.onClick}>
       <span className={styles.icon}>
           <CartIcon/>
       </span>
