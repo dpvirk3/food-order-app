@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "./Components/Layout/Header";
 import Meals from "./Components/Meals/Meals";
 import Cart from "./Components/Cart/Cart";
+import CartCtxProvider from './store/CartCtxProvider';
 
 function App() {
   const [cartVisible, setCartVisible] = useState(false);
@@ -15,7 +16,7 @@ function App() {
   };
 
   return (
-    <React.Fragment>
+    <CartCtxProvider>
       {cartVisible && (
         <Cart isVisible={cartVisible}  onHide={hideCartHandler} />
       )}
@@ -24,7 +25,7 @@ function App() {
       <main>
         <Meals />
       </main>
-    </React.Fragment>
+    </CartCtxProvider>
   );
 }
 
