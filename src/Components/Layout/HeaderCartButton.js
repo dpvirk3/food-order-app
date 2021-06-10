@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import CartIcon from "../Cart/CartIcon";
 import styles from "./HeaderCartButton.module.css";
@@ -12,7 +12,6 @@ const HeaderCartButton = (props) => {
   //higher level provider
   const cartCtx = useContext(CartContext);
 
-
   //could use items.length = but we will be storing amount in the 
   //items to indicate multiple orders of the same meal.
   //so use built in array function reduce
@@ -20,8 +19,30 @@ const HeaderCartButton = (props) => {
       (curNumber, item) => {return curNumber + item.amount}, 0
   )
 
+  const [btnHighLighted, setBtnHighlighted] = useState(false);
+
+  //add bump from css to have animation
+  const btnClasses = `${styles.button} ${btnHighLighted? styles.bump :''} `;
+ 
+  const cartItems = cartCtx.items;
+  
+  //when the cartItems changes, set btn highlighted for animation
+  //remove animation after 300 ms - the duration of animation
+  useEffect (() => {
+    if (cartItems.length > 0) {
+      setBtnHighlighted(true);
+
+      const timerFunc = setTimeout(() => {
+        setBtnHighlighted(false);
+      }, 300);
+
+      return (() => clearTimeout(timerFunc));
+    }
+  }, [cartItems]);
+
+
   return (
-    <button className={styles.button} onClick={props.onClick}>
+    <button className={btnClasses } onClick={props.onClick}>
       <span className={styles.icon}>
         <CartIcon />
       </span>
