@@ -9,6 +9,7 @@ const MealItem = (props) => {
 
   const addItemHandler = (numAdded) => {
     cartContext.addItem ({
+      key: props.id,
       id: props.id,
       name: props.name,
       price: props.price,
@@ -19,7 +20,7 @@ const MealItem = (props) => {
   const price = `USD ${props.price.toFixed(2)}`;
 
   return (
-    <li className={styles.meal}>
+    <li className={styles.meal} key={props.id}>
       <div>
         <h3>{props.name}</h3>
 
