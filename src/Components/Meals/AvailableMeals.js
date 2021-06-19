@@ -32,17 +32,7 @@ import { useEffect, useState } from "react";
 
 const AvailableMeals = () => {
   const [fetchedMeals, setfetchedMeals] = useState([]);
-
-  const mealsList =
-    fetchedMeals.map((meal) => (
-            <MealItem
-              key={meal.id}
-              id={meal.id}
-              name={meal.name}
-              description={meal.description}
-              price={meal.price}
-            />
-        ));
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -63,8 +53,28 @@ const AvailableMeals = () => {
     };
     fetchMeals();
 
+    setTimeout(15000);
+    setIsLoading(false);
     // console.log(fetchedMeals);
   }, []);
+
+  if (isLoading) {
+    return (
+      <section>
+        <p className={styles.mealsLoading}>Loading...</p>
+      </section>
+    );
+  }
+
+  const mealsList = fetchedMeals.map((meal) => (
+    <MealItem
+      key={meal.id}
+      id={meal.id}
+      name={meal.name}
+      description={meal.description}
+      price={meal.price}
+    />
+  ));
 
   return (
     <section className={styles.meals}>
