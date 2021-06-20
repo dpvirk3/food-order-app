@@ -3,11 +3,13 @@ import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
 import Checkout from "./Checkout";
-import { useContext, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const [doCheckout, setDoCheckout] = useState(false);
+  const [submittingOrder, setSubmittingOrder] = useState(false);
+  const [successSubmission, setSuccessSubmission] = useState(false);
 
   const totalAmt = `$${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
@@ -24,8 +26,9 @@ const Cart = (props) => {
     setDoCheckout(true);
   };
 
-  const submitOrderHandler = (userDataFromCheckout) => {
-    fetch(
+  const submitOrderHandler = async (userDataFromCheckout) => {
+    setSubmittingOrder(true);
+    const response = await fetch(
       "https://react-food-cart-b1cd7-default-rtdb.firebaseio.com/order.json",
       {
         method: "POST",
@@ -35,6 +38,14 @@ const Cart = (props) => {
         }),
       }
     );
+
+    setSubmittingOrder(false);
+
+    if (response.ok) {
+      setSuccessSubmission(true);
+    } else {
+      setSuccessSubmission(false);
+    }
   };
 
   //example cart item
@@ -68,8 +79,8 @@ const Cart = (props) => {
     </div>
   );
 
-  return (
-    <Modal onBackdropClick={props.onHide}>
+  const initModalContent = (
+    <Fragment>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
@@ -79,6 +90,29 @@ const Cart = (props) => {
         <Checkout onConfirmOrder={submitOrderHandler} onCancel={props.onHide} />
       )}
       {!doCheckout && cartActions}
+    </Fragment>
+  );
+
+  const submittingModalContent = (
+    <Fragment>
+      <p>Submitting your order</p>
+    </Fragment>
+  );
+
+  const successSubmitContent = (
+    <Fragment>
+      <p>Order submitted successfully!</p>
+      <button className={styles.button} onClick={props.onHide}>
+        close
+      </button>
+    </Fragment>
+  );
+
+  return (
+    <Modal onBackdropClick={props.onHide}>
+      {!submittingOrder && !successSubmission && initModalContent}
+      {submittingOrder && !successSubmission && submittingModalContent}
+      {successSubmission && successSubmitContent}
     </Modal>
   );
 };
