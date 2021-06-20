@@ -24,6 +24,19 @@ const Cart = (props) => {
     setDoCheckout(true);
   };
 
+  const submitOrderHandler = (userDataFromCheckout) => {
+    fetch(
+      "https://react-food-cart-b1cd7-default-rtdb.firebaseio.com/order.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userDataFromCheckout,
+          orderedItems: cartCtx.items,
+        }),
+      }
+    );
+  };
+
   //example cart item
   const cartItems = (
     <ul className={styles["cart-items"]}>
@@ -62,7 +75,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmt}</span>
       </div>
-      {doCheckout && <Checkout onCancel={props.onHide} />}
+      {doCheckout && (
+        <Checkout onConfirmOrder={submitOrderHandler} onCancel={props.onHide} />
+      )}
       {!doCheckout && cartActions}
     </Modal>
   );

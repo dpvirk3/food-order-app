@@ -40,6 +40,12 @@ const Checkout = (props) => {
       return;
     }
 
+    props.onConfirmOrder({
+      name: name,
+      street: street,
+      city: city,
+      postalCode: postalCode,
+    });
     console.log(name, street, city, postalCode);
   };
 
