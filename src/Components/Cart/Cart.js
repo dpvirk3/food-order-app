@@ -2,6 +2,7 @@ import styles from "./Cart.module.css";
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
+import Checkout from "./Checkout";
 import { useContext } from "react";
 
 const Cart = (props) => {
@@ -39,7 +40,9 @@ const Cart = (props) => {
       <div className={styles.total}>
         <span>Total Amount</span>
         <span>{totalAmt}</span>
+    
       </div>
+      <Checkout />
       <div className={styles.actions}>
         <button className={styles["button--alt"]} onClick={props.onHide}>
           close
