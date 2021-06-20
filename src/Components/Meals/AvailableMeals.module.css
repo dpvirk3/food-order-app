@@ -13,8 +13,15 @@
 
 .mealsLoading {
   text-align: center;
+  color: green;
+}
+
+.mealsFetchError {
+  text-align: center;
+  font-size: 2rem;
   color: red;
 }
+
 
 @keyframes meals-appear {
   from {

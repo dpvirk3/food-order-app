@@ -33,12 +33,18 @@ import { useEffect, useState } from "react";
 const AvailableMeals = () => {
   const [fetchedMeals, setfetchedMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
         "https://react-food-cart-b1cd7-default-rtdb.firebaseio.com/meals.json"
       );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong! " + response.status);
+      }
+
       const data = await response.json();
       const newMealsList = [];
       for (const key in data) {
@@ -51,9 +57,12 @@ const AvailableMeals = () => {
       }
       setfetchedMeals(newMealsList);
     };
-    fetchMeals();
 
-    setTimeout(15000);
+    fetchMeals().catch((error) => {
+      setFetchError(error.message);
+    });
+
+    // setTimeout(15000);
     setIsLoading(false);
     // console.log(fetchedMeals);
   }, []);
@@ -62,6 +71,14 @@ const AvailableMeals = () => {
     return (
       <section>
         <p className={styles.mealsLoading}>Loading...</p>
+      </section>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <section>
+        <p className={styles.mealsFetchError}>{fetchError}</p>
       </section>
     );
   }
